@@ -23,16 +23,16 @@ namespace PRG2_Assignment
 
         //Constructors
         IceCream() { }
-        IceCream(string o, int s, List<Flavour> f, List<Topping> l)
+        IceCream(string o, int s, List<Flavour> f, List<Topping> t)
         {
             Option = o;
             Scoops = s;
             Flavours = f;
-            Toppings = l;
+            Toppings = t;
         }
         
         //Methods
-        double CalculatePrice()
+        public double CalculatePrice()
         {
             double price = 0;
             if (Option == "Cup")
@@ -70,13 +70,13 @@ namespace PRG2_Assignment
                 }
                 if (Toppings.Count > 0)
                 {
-                    foreach(Topping t in Toppings)
+                    /*foreach(Topping t in Toppings)
                     {
                         if(t == "Chocolate-dipped cone")
                         {
 
                         }
-                    }
+                    }*/
                 }
             }
             else if (Option == "Waffle")
@@ -98,6 +98,7 @@ namespace PRG2_Assignment
             {
                 Console.WriteLine("Invalid Input");
             }
+            return price;
         }
 
         public override string ToString()
@@ -114,7 +115,7 @@ namespace PRG2_Assignment
                 topping_string = t + " ";
             }
 
-            return "Options: " + Option + " Scoops: " + Scoops + " Flavours: " + flavour_string + "Toppings: " + ;
+            return "Options: " + Option + " Scoops: " + Scoops + " Flavours: " + flavour_string + "Toppings: " + topping_string;
         }
 
 
