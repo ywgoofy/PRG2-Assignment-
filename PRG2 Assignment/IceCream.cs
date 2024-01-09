@@ -34,7 +34,70 @@ namespace PRG2_Assignment
         //Methods
         double CalculatePrice()
         {
-                
+            double price = 0;
+            if (Option == "Cup")
+            {
+                if (Scoops == 1)
+                {
+                    price += 4;
+                }
+                else if (Scoops == 2)
+                {
+                    price += 5.5;
+                }
+                else if (Scoops == 3)
+                {
+                    price += 6.5;
+                }
+                if (Toppings.Count > 0)
+                {
+                    price += Toppings.Count * 1;
+                }
+            }
+            else if (Option == "Cone")
+            {
+                if (Scoops == 1)
+                {
+                    price += 4;
+                }
+                else if (Scoops == 2)
+                {
+                    price += 5.5;
+                }
+                else if (Scoops == 3)
+                {
+                    price += 6.5;
+                }
+                if (Toppings.Count > 0)
+                {
+                    foreach(Topping t in Toppings)
+                    {
+                        if(t == "Chocolate-dipped cone")
+                        {
+
+                        }
+                    }
+                }
+            }
+            else if (Option == "Waffle")
+            {
+                if (Scoops == 1)
+                {
+
+                }
+                else if (Scoops == 2)
+                {
+
+                }
+                else if (Scoops == 3)
+                {
+
+                }
+            }
+            else
+            {
+                Console.WriteLine("Invalid Input");
+            }
         }
 
         public override string ToString()
