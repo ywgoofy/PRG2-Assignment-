@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace PRG2_Assignment
 {
-    class IceCream
+    abstract class IceCream
     {
         //Attributes
         private string option;
@@ -22,18 +22,18 @@ namespace PRG2_Assignment
         public List<Topping> Toppings { get; set; } = new List<Topping>();
 
         //Constructors
-        IceCream() { }
-        IceCream(string o, int s, List<Flavour> f, List<Topping> t)
+        public IceCream() { }
+        public IceCream(string o, int s, List<Flavour> f, List<Topping> t)
         {
             Option = o;
             Scoops = s;
             Flavours = f;
             Toppings = t;
         }
-        
+
         //Methods
-        public double CalculatePrice()
-        {
+        abstract public double CalculatePrice(); // idk what to do with this so I comment out and leave it to u :)
+        /*{
             double price = 0;
             if (Option == "Cup")
             {
@@ -76,7 +76,7 @@ namespace PRG2_Assignment
                         {
 
                         }
-                    }*/
+                    }/
                 }
             }
             else if (Option == "Waffle")
@@ -99,7 +99,7 @@ namespace PRG2_Assignment
                 Console.WriteLine("Invalid Input");
             }
             return price;
-        }
+        }*/
 
         public override string ToString()
         {
