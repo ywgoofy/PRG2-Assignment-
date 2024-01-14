@@ -10,7 +10,7 @@ namespace PRG2_Assignment
     class Order
     {
         private int id;
-        public int Id { get; set;}
+        public int Id { get; set; }
 
         private DateTime timereceived;
         public DateTime TimeReceived { get; set; }
@@ -33,7 +33,7 @@ namespace PRG2_Assignment
         //Methods
         public void ModifyIceCream(int i) //Nah this one i discuss with that pookie, shit extra confusing
         {
-            IceCream iceCream = iceCreamList[i-1];
+            IceCream iceCream = iceCreamList[i - 1];
             while (true)
             {
                 Console.WriteLine("[1] Option");
@@ -63,11 +63,11 @@ namespace PRG2_Assignment
                         Console.WriteLine("What options would you like? (0 to exit): ");
                         string option = Console.ReadLine();
                         string temp = option.ToLower();
-                        if (option == "0" )
+                        if (option == "0")
                         {
                             break;
                         }
-                        else if (option == "cup" || option == "cone" || option == "waffle")
+                        else if (temp == "cup" || temp == "cone" || temp == "waffle")
                         {
                             iceCream.Option = option;
                             break;
@@ -90,7 +90,7 @@ namespace PRG2_Assignment
                             {
                                 break;
                             }
-                            else if (scoops >0 && scoops <=3)
+                            else if (scoops > 0 && scoops <= 3)
                             {
                                 iceCream.Scoops = scoops;
                                 break;
@@ -102,37 +102,78 @@ namespace PRG2_Assignment
                         }
                         catch (FormatException)
                         {
-                            Console.WriteLine("Invalid Input");                        
+                            Console.WriteLine("Invalid Input");
                         }
                     }
                 }
                 else if (choice == "3")
                 {
-                    while(true)
+                    while (true)
                     {
                         try
                         {
-                            foreach(IceCream j in IceCreamsList)
+
+
+                            Console.WriteLine("These are your current Flavours.");
+                            foreach (IceCream j in IceCreamsList)
                             {
                                 Console.WriteLine(j.Flavours);
                             }
-                            Console.Write("Please enter the flavour you want to remove: ");
-                            string flavours_removed =  Console.ReadLine();
-                            if (flavours_removed == "Vanilla" || flavours_removed == "Chocolate" || flavours_removed == "Strawberry" || flavours_removed == "Durian" || flavours_removed == "Ube" || flavours_removed == "Sea salt")
+                            //Premium flavours
+                            List<string> premium_flavours = new List<string> { "durian", "ube", "sea salt" };
+
+                            Console.WriteLine();
+                            Console.WriteLine("[1] Remove Flavour");
+                            Console.WriteLine("[2] Add Flavour");
+                            Console.WriteLine("[3] Replace/Change Flavour");
+                            Console.Write("Please enter your choice.");
+                            string option = Console.ReadLine();
+
+                            if (option == "1")
                             {
-                                //iceCream.Flavours.Remove(flavours_removed);
+                                Console.Write("Please enter the flavour you want to remove: ");
+                                string flavours_removed = Console.ReadLine();
+                                string temp = flavours_removed.ToLower();
+                                if (temp == "vanilla" || temp == "chocolate" || temp == "strawberry" || temp == "durian" || temp == "ube" || temp == "sea salt")
+                                {
+                                    Flavour flavour = new Flavour();
+                                    if (premium_flavours.Contains(temp))
+                                    {
+                                        flavour = new Flavour(flavours_removed, true, 1);
+                                    }
+                                    else
+                                    {
+                                        flavour = new Flavour(flavours_removed, false, 1);
+                                    }
+                                    iceCream.Flavours.Remove(flavour);
+                                }
                             }
+
+                            else if (option == "2")
+                            {
                                 Console.Write("Please enter the new flavours: ");
-                            string flavours = Console.ReadLine();
-                            flavours = flavours.ToLower();
-                            if (flavours == "vanilla" || flavours == "chocolate" || flavours == "strawberry" || flavours == "durian" || flavours == "ube" || flavours == "sea salt")
-                            {
-                                //iceCream.Flavours.Add(flavours);
+                                string flavours = Console.ReadLine();
+                                string temp = flavours.ToLower();
+                                if (temp == "vanilla" || temp == "chocolate" || temp == "strawberry" || temp == "durian" || temp == "ube" || temp == "sea salt")
+                                {
+                                    Flavour flavour = null;
+                                    if (premium_flavours.Contains(temp))
+                                    {
+                                        flavour = new Flavour(flavours, true, 1);
+                                    }
+                                    else
+                                    {
+                                        flavour = new Flavour(flavours, false, 1);
+                                    }
+
+                                    iceCream.Flavours.Add(flavour);
+                                }
                             }
-                        } 
-                        catch (FormatException) 
-                        { 
-                            Console.WriteLine("Invalid Input"); 
+
+                        }
+                        catch (FormatException)
+                        {
+                            Console.WriteLine("Invalid Input");
                         }
 
 
@@ -140,7 +181,7 @@ namespace PRG2_Assignment
                     }
                 }
 
-                
+
             }
         }
 
@@ -151,14 +192,14 @@ namespace PRG2_Assignment
 
         public void DeleteIceCream(int i)
         {
-            IceCreamsList.Remove(IceCreamsList[i-1]); //i-1 because int i is option of the icecream chosen from the icecreams displayed in the order starting by 1
+            IceCreamsList.Remove(IceCreamsList[i - 1]); //i-1 because int i is option of the icecream chosen from the icecreams displayed in the order starting by 1
         }
 
         public double CalculateTotal()
         {
             double total = 0;
 
-            foreach(IceCream i in iceCreamList)
+            foreach (IceCream i in iceCreamList)
             {
                 total += i.CalculatePrice();
             }
@@ -169,9 +210,9 @@ namespace PRG2_Assignment
         public override string ToString()
         {
             string str = null;
-            foreach(IceCream i in iceCreamList)
+            foreach (IceCream i in iceCreamList)
             {
-                str += i.ToString()+ "\n";
+                str += i.ToString() + "\n";
             }
             return "Id: " + Id + " TimeReceived: " + TimeReceived + " TimeFulfilled: " + TimeFulfilled + "\nIceCreams: " + str;
         }
