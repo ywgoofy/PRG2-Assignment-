@@ -34,6 +34,8 @@ namespace PRG2_Assignment
         public void ModifyIceCream(int i) //Nah this one i discuss with that pookie, shit extra confusing
         {
             IceCream iceCream = iceCreamList[i - 1];
+            //Premium flavours
+            List<string> premium_flavours = new List<string> { "durian", "ube", "sea salt" };
             while (true)
             {
                 Console.WriteLine("[1] Option");
@@ -84,20 +86,63 @@ namespace PRG2_Assignment
                     {
                         try
                         {
-                            Console.WriteLine("How many Scoops would you like? (0 to exit): ");
-                            int scoops = Convert.ToInt32(Console.ReadLine());
-                            if (scoops == 0)
+                            Console.WriteLine("[0] Exit");
+                            Console.WriteLine("[1] Add Scoop");
+                            Console.WriteLine("[2] Remove Scoop");
+                            Console.WriteLine("The flavours available are:");
+                            Console.WriteLine("Vanilla\nChocolate\nStrawberry\nDurain\nUbe\nSea salt\n");
+                            Console.WriteLine("Please enter option: ");
+
+                            int option = Convert.ToInt32(Console.ReadLine());
+                            if (option == 0)
                             {
                                 break;
                             }
-                            else if (scoops > 0 && scoops <= 3)
+                            string temp = null;
+                            bool premium = false;
+                            while (true)
                             {
-                                iceCream.Scoops = scoops;
-                                break;
+                                Console.WriteLine("Please enter flavour for Scoop: ");
+                                temp = Console.ReadLine(); //Flavour
+                                temp = temp.ToLower();
+                                if (temp == "vanilla" || temp == "chocolate" || temp == "strawberry" || temp == "durian" || temp == "ube" || temp == "sea salt")
+                                {
+
+                                    if (premium_flavours.Contains(temp))
+                                    {
+                                        premium = true;
+                                    }
+                                    else
+                                    {
+                                        premium = false;
+                                    }
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid flavour");
+                                }
                             }
-                            else
+                            Flavour flavour  = new Flavour(temp,premium,1);
+                            if (option == 1)
                             {
-                                Console.WriteLine("Scoops must be >0 and <= 3");
+                                iceCream.Flavours.Add(flavour);
+                                iceCream.Scoops++;
+                            }
+                            else if (option == 2)
+                            {
+                                for (int j = 0; i < iceCream.Flavours.Count; i++)
+                                {
+                                    if (iceCream.Flavours[j].Type.ToLower() == temp)
+                                    {
+                                        iceCream.Flavours.RemoveAt(j);
+                                        iceCream.Scoops -= 1;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("You currently don't have this flavour.");
+                                    }
+                                }
                             }
                         }
                         catch (FormatException)
@@ -106,6 +151,10 @@ namespace PRG2_Assignment
                         }
                     }
                 }
+
+
+
+
                 else if (choice == "3")
                 {
                     while (true)
@@ -119,8 +168,7 @@ namespace PRG2_Assignment
                             {
                                 Console.WriteLine(j.Flavours);
                             }
-                            //Premium flavours
-                            List<string> premium_flavours = new List<string> { "durian", "ube", "sea salt" };
+                            
 
                             Console.WriteLine();
                             Console.WriteLine("[1] Remove Flavour");
