@@ -37,9 +37,13 @@ namespace PRG2_Assignment
             IceCream iceCream = iceCreamList[i - 1];
             //Premium flavours
             List<string> premium_flavours = new List<string> { "durian", "ube", "sea salt" };
+
+            //Toppings list
+            List<string> toppings_list = new List<string> {"sprinkles","mochi","sago","orea"};
+
             //Utility Methods
 
-            bool Premium(string temp) //Checks if the flavour is premium or not
+            bool IsPremium(string temp) //Checks if the flavour is premium or not
             {
                 if (premium_flavours.Contains(temp))
                 {
@@ -64,116 +68,313 @@ namespace PRG2_Assignment
 
             }
 
-
-            
-            
-            while (true)
+            bool IsToppings(string temp)
             {
-                Console.WriteLine("[1] Option");
-                Console.WriteLine("[2] Scoops");
-                Console.WriteLine("[3] Flavours");
-                Console.WriteLine("[4] Toppings");
-                if (iceCream.Option == "Cone")
+                if(toppings_list.Contains(temp))
                 {
-                    Console.WriteLine("[5] Dipped Cone");
+                    return true;
                 }
-                else if (iceCream.Option == "Waffle")
+                else
                 {
-                    Console.WriteLine("[5]Waffle Flavour");
+                    return false;
                 }
+            }
 
-                Console.Write("What would you like to modify? (0 to exit) : ");
-                string choice = Console.ReadLine();
 
-                if (choice == "0")
+            try
+            {
+                while (true)
                 {
-                    break;
-                }
-                else if (choice == "1")
-                {
-                    while (true)
+                    Console.WriteLine("[1] Option");
+                    Console.WriteLine("[2] Scoops");
+                    Console.WriteLine("[3] Flavours");
+                    Console.WriteLine("[4] Toppings");
+                    if (iceCream.Option == "Cone")
                     {
-                        Console.WriteLine("What options would you like? (0 to exit): ");
-                        string option = Console.ReadLine();
-                        string temp = option.ToLower();
-                        if (option == "0")
+                        Console.WriteLine("[5] Dipped Cone");
+                    }
+                    else if (iceCream.Option == "Waffle")
+                    {
+                        Console.WriteLine("[5]Waffle Flavour");
+                    }
+
+                    Console.Write("What would you like to modify? (0 to exit) : ");
+                    string choice = Console.ReadLine();
+
+                    if (choice == "0")
+                    {
+                        break;
+                    }
+                    else if (choice == "1")
+                    {
+                        while (true)
                         {
-                            break;
-                        }
-                        else if (temp == "cup" || temp == "cone" || temp == "waffle")
-                        {
-                            iceCream.Option = option;
-                            break;
-                        }
-                        else
-                        {
-                            Console.WriteLine("Invalid Option");
+                            try
+                            {
+
+
+                                Console.WriteLine("What options would you like? (0 to exit): ");
+                                string option = Console.ReadLine();
+                                string temp = option.ToLower();
+                                if (option == "0")
+                                {
+                                    break;
+                                }
+                                else if (temp == "cup" || temp == "cone" || temp == "waffle")
+                                {
+                                    iceCream.Option = option;
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid Option");
+                                }
+                            }
+                            catch (FormatException)
+                            {
+                                Console.WriteLine("Invalid Input");
+                            }
                         }
                     }
-                }
-                else if (choice == "2")
-                {
-                    while (true)
+                    else if (choice == "2")
+                    {
+                        while (true)
+                        {
+                            try
+                            {
+                                Console.WriteLine("[0] Exit");
+                                Console.WriteLine("[1] Add Scoop");
+                                Console.WriteLine("[2] Remove Scoop");
+                                Console.WriteLine("The flavours available are:");
+                                Console.WriteLine("Vanilla\nChocolate\nStrawberry\nDurain\nUbe\nSea salt\n");
+                                Console.WriteLine("Please enter option: ");
+
+                                int option = Convert.ToInt32(Console.ReadLine());
+                                if (option == 0)
+                                {
+                                    break;
+                                }
+                                string temp = null;
+                                bool premium = false;
+                                while (true)
+                                {
+                                    Console.WriteLine("Please enter flavour for Scoop: ");
+                                    temp = Console.ReadLine(); //Flavour
+                                    temp = temp.ToLower();
+
+                                    if (IsFlavour(temp))
+                                    {
+                                        premium = IsPremium(temp);
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid flavour");
+                                    }
+                                }
+                                Flavour flavour = new Flavour(temp, premium, 1);
+                                if (option == 1)
+                                {
+                                    iceCream.Flavours.Add(flavour);
+                                    iceCream.Scoops++;
+                                }
+                                else if (option == 2)
+                                {
+                                    for (int j = 0; i < iceCream.Flavours.Count; i++)
+                                    {
+                                        if (iceCream.Flavours[j].Type.ToLower() == temp)
+                                        {
+                                            if ((iceCream.Flavours[j].Quantity - 1) == 0)
+                                            {
+                                                iceCream.Flavours.RemoveAt(j);
+                                            }
+                                            else
+                                            {
+                                                iceCream.Flavours[j].Quantity -= 1;
+                                            }
+                                            iceCream.Scoops -= 1;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("You currently don't have this flavour.");
+                                        }
+                                    }
+                                }
+                            }
+                            catch (FormatException)
+                            {
+                                Console.WriteLine("Invalid Input");
+                            }
+                        }
+                    }
+
+                    else if (choice == "3")
+                    {
+                        while (true)
+                        {
+                            try
+                            {
+                                int count = 1;
+                                bool premium;
+                                Console.WriteLine("These are your current Flavours.");
+                                foreach (Flavour f in iceCream.Flavours)
+                                {
+                                    Console.WriteLine(f.ToString());
+                                }
+
+
+                                Console.WriteLine();
+                                string flavour_to_change;
+                                string flavour_to_replace;
+                                while (true)
+                                {
+                                    Console.Write("Which flavours would you like to change: ");
+                                    flavour_to_change = Console.ReadLine();
+                                    bool key = false;
+                                    foreach (Flavour f in iceCream.Flavours)
+                                    {
+                                        if (flavour_to_change.ToLower() == f.Type.ToLower())
+                                        {
+                                            key = true;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("Invalid flavour");
+                                            key = false;
+                                        }
+                                    }
+                                    if (key)
+                                    {
+                                        break;
+                                    }
+                                }
+
+                                while (true)
+                                {
+                                    Console.Write("What flavour would you like to replace it with: ");
+                                    flavour_to_replace = Console.ReadLine();
+                                    if (IsFlavour(flavour_to_replace))
+                                    {
+                                        premium = IsPremium(flavour_to_replace);
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid flavour");
+                                    }
+                                }
+                                Flavour flavour_replace = new Flavour(flavour_to_replace, premium, 1);
+
+                                foreach (Flavour f in iceCream.Flavours)
+                                {
+                                    if (f.Type == flavour_to_change && f.Quantity > 1)
+                                    {
+                                        f.Quantity -= 1;
+                                        foreach (Flavour f1 in iceCream.Flavours)
+                                        {
+                                            if (f1.Type == flavour_to_replace)
+                                            {
+                                                f1.Quantity += 1;
+                                            }
+                                            else
+                                            {
+                                                iceCream.Flavours.Add(flavour_replace);
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        iceCream.Flavours.Remove(f);
+                                        foreach (Flavour f1 in iceCream.Flavours)
+                                        {
+                                            if (f1.Type == flavour_to_replace)
+                                            {
+                                                f1.Quantity += 1;
+                                            }
+                                            else
+                                            {
+                                                iceCream.Flavours.Add(flavour_replace);
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            catch (FormatException)
+                            {
+                                Console.WriteLine("Invalid Input");
+                            }
+                        }
+                    }
+                    else if (choice == "4")
                     {
                         try
                         {
                             Console.WriteLine("[0] Exit");
-                            Console.WriteLine("[1] Add Scoop");
-                            Console.WriteLine("[2] Remove Scoop");
-                            Console.WriteLine("The flavours available are:");
-                            Console.WriteLine("Vanilla\nChocolate\nStrawberry\nDurain\nUbe\nSea salt\n");
-                            Console.WriteLine("Please enter option: ");
-
-                            int option = Convert.ToInt32(Console.ReadLine());
-                            if (option == 0)
+                            Console.WriteLine("[1] Add Toppings");
+                            Console.WriteLine("[2] Remove Toppings");
+                            Console.Write("Enter Choice: ");
+                            string option = Console.ReadLine();
+                            if (option == "0")
                             {
                                 break;
                             }
-                            string temp = null;
-                            bool premium = false;
-                            while (true)
+                            else if (option == "1")
                             {
-                                Console.WriteLine("Please enter flavour for Scoop: ");
-                                temp = Console.ReadLine(); //Flavour
-                                temp = temp.ToLower();
-
-                                if (IsFlavour(temp))
-                                { 
-                                    premium = Premium(temp);
-                                    break;
-                                }
-                                else
+                                while (true)
                                 {
-                                    Console.WriteLine("Invalid flavour");
-                                }
-                            }
-                            Flavour flavour  = new Flavour(temp,premium,1);
-                            if (option == 1)
-                            {
-                                iceCream.Flavours.Add(flavour);
-                                iceCream.Scoops++;
-                            }
-                            else if (option == 2)
-                            {
-                                for (int j = 0; i < iceCream.Flavours.Count; i++)
-                                {
-                                    if (iceCream.Flavours[j].Type.ToLower() == temp)
+                                    Console.Write("Which toppings would you like to add?: ");
+                                    string topping_response = Console.ReadLine();
+                                    if (IsToppings(topping_response.ToLower()))
                                     {
-                                        if ((iceCream.Flavours[j].Quantity -1) == 0)
-                                        { 
-                                            iceCream.Flavours.RemoveAt(j);
-                                        }
-                                        else
-                                        {
-                                            iceCream.Flavours[j].Quantity -= 1;
-                                        }
-                                        iceCream.Scoops -= 1;
+                                        Topping topping = new Topping(topping_response);
+                                        iceCream.Toppings.Add(topping);
+                                        Console.WriteLine("Topping added");
+                                        break;
                                     }
                                     else
                                     {
-                                        Console.WriteLine("You currently don't have this flavour.");
+                                        Console.WriteLine("Invalid Topping");
                                     }
                                 }
+                            }
+                            else if (option == "2")
+                            {
+                                while (true)
+                                {
+                                    bool key = false;
+                                    Console.WriteLine("Which toppings would you like to remove?: ");
+                                    string topping_response = Console.ReadLine();
+                                    if (IsToppings(topping_response.ToLower()))
+                                    {
+                                        foreach (Topping t in iceCream.Toppings)
+                                        {
+                                            if (t.Type.ToLower() == topping_response)
+                                            {
+                                                iceCream.Toppings.Remove(t);
+                                                key = true;
+                                            }
+                                            else
+                                            {
+                                                key = false;
+                                                Console.WriteLine("Topping not found");
+                                            }
+                                        }
+                                        if (key)
+                                        {
+                                            Console.WriteLine("Topping removed");
+                                            break;
+                                        }
+
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid Topping");
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine("Invalid option");
                             }
                         }
                         catch (FormatException)
@@ -181,110 +382,22 @@ namespace PRG2_Assignment
                             Console.WriteLine("Invalid Input");
                         }
                     }
-                }
-
-                else if (choice == "3")
-                {
-                    while (true)
+                    //GG this one not sure
+                    else if(choice == "5")
                     {
-                        try
+                        if(iceCream.Option == "Cone")
                         {
-                            int count = 1;
-                            bool premium;
-                            Console.WriteLine("These are your current Flavours.");
-                            foreach(Flavour f in iceCream.Flavours)
-                            {
-                                Console.WriteLine(f.ToString());
-                            }
-                            
-
-                            Console.WriteLine();
-                            string flavour_to_change;
-                            string flavour_to_replace;
-                            while (true)
-                            {
-                                Console.Write("Which flavours would you like to change: ");
-                                flavour_to_change = Console.ReadLine();
-                                bool key = false;
-                                foreach(Flavour f in iceCream.Flavours)
-                                {
-                                    if(flavour_to_change == f.Type)
-                                    {
-                                        key = true;
-                                    }
-                                    else
-                                    {
-                                        key = false;
-                                    }
-                                }
-                                if(key)
-                                {
-                                    break;
-                                }
-                            }
-
-                            while (true)
-                            {
-                                Console.Write("What flavour would you like to replace it with: ");
-                                flavour_to_replace = Console.ReadLine();
-                                if (IsFlavour(flavour_to_replace))
-                                {
-                                    premium = Premium(flavour_to_replace);
-                                    break;
-                                }
-                                else
-                                {
-                                    Console.WriteLine("Invalid flavour");
-                                }
-                            }
-                            Flavour flavour_replace = new Flavour(flavour_to_replace, premium, 1);
-
-                            foreach (Flavour f in iceCream.Flavours)
-                            {
-                                if (f.Type == flavour_to_change && f.Quantity >1)
-                                {
-                                    f.Quantity -= 1;
-                                    foreach (Flavour f1 in iceCream.Flavours)
-                                    {
-                                        if (f1.Type == flavour_to_replace)
-                                        {
-                                            f1.Quantity += 1;
-                                        }
-                                        else
-                                        {
-                                            iceCream.Flavours.Add(flavour_replace);
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    iceCream.Flavours.Remove(f);
-                                    foreach (Flavour f1 in iceCream.Flavours)
-                                    {
-                                        if (f1.Type == flavour_to_replace)
-                                        {
-                                            f1.Quantity += 1;
-                                        }
-                                        else
-                                        {
-                                            iceCream.Flavours.Add(flavour_replace);
-                                        }
-                                    }
-                                } 
-                             }
-                        }
-                        catch (FormatException)
-                        {
-                            Console.WriteLine("Invalid Input");
+                            Cone cone = new Cone(iceCream.Option, iceCream.Scoops, iceCream.Flavours, iceCream.Toppings,false) ;
+                            Console.Write("Would you like to add dipped cone?");
                         }
                     }
-                }
-                else if (choice == "4")
-                {
+
 
                 }
-
-
+            }
+            catch(FormatException)
+            {
+                Console.WriteLine("Invalid Input");
             }
         }
 
