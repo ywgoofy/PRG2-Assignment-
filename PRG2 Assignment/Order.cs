@@ -46,6 +46,7 @@ namespace PRG2_Assignment
 
             bool IsPremium(string temp) //Checks if the flavour is premium or not
             {
+                temp = temp.ToLower();
                 if (premium_flavours.Contains(temp))
                 {
                     return true;
@@ -58,6 +59,7 @@ namespace PRG2_Assignment
 
             bool IsFlavour(string temp)
             {
+                temp = temp.ToLower();
                 if (temp == "vanilla" || temp == "chocolate" || temp == "strawberry" || temp == "durian" || temp == "ube" || temp == "sea salt")
                 {
                     return true;
@@ -267,44 +269,53 @@ namespace PRG2_Assignment
                                 }
                                 Flavour flavour_replace = new Flavour(flavour_to_replace, premium, 1);
 
-                                
+                                bool pass = true;
                                 foreach (Flavour f in iceCream.Flavours)
                                 {
                                     key = false;
-                                    if (f.Type == flavour_to_change && f.Quantity > 1)
+                                    if (f.Type.ToLower() == flavour_to_change.ToLower() && f.Quantity > 1)
                                     {
+                                        pass = false;
                                         f.Quantity -= 1;
-                                        
+
                                         foreach (Flavour f1 in iceCream.Flavours)
                                         {
-                                            if (f1.Type == flavour_to_replace)
+                                            if (f1.Type.ToLower() == flavour_to_replace.ToLower())
                                             {
                                                 f1.Quantity += 1;
                                                 key = true;
                                                 break;
-                                            }    
-                                            
-                                        }
-                                        if(!key)
-                                        {
-                                            iceCream.Flavours.Add(flavour_replace);
-                                        }
-                                        
-                                    }
-                                    else
-                                    {
-                                        iceCream.Flavours.Remove(f);
-                                        foreach (Flavour f1 in iceCream.Flavours)
-                                        {
-                                            if (f1.Type == flavour_to_replace)
-                                            {
-                                                f1.Quantity += 1;
                                             }
-                                            
+
                                         }
                                         if (!key)
                                         {
                                             iceCream.Flavours.Add(flavour_replace);
+                                        }
+                                        break;
+                                    }
+                                }
+                                if (pass)
+                                {
+                                    foreach (Flavour f in iceCream.Flavours)
+                                    {
+                                        if (f.Type.ToLower() == flavour_to_change.ToLower() && f.Quantity <= 1)
+                                        {
+                                            key = false;
+                                            iceCream.Flavours.Remove(f);
+                                            foreach (Flavour f1 in iceCream.Flavours)
+                                            {
+                                                if (f1.Type == flavour_to_replace)
+                                                {
+                                                    f1.Quantity += 1;
+                                                    break;
+                                                }
+
+                                            }
+                                            if (!key)
+                                            {
+                                                iceCream.Flavours.Add(flavour_replace);
+                                            }
                                         }
                                     }
                                 }
@@ -319,6 +330,12 @@ namespace PRG2_Assignment
                     {
                         try
                         {
+                            Console.WriteLine("Flavours you currently have:");
+                            foreach (Topping t in iceCream.Toppings)
+                            {
+                                Console.WriteLine(t.Type);
+                            }
+                            Console.WriteLine();
                             Console.WriteLine("[0] Exit");
                             Console.WriteLine("[1] Add Toppings");
                             Console.WriteLine("[2] Remove Toppings");
@@ -336,7 +353,12 @@ namespace PRG2_Assignment
                                     string topping_response = Console.ReadLine();
                                     if (IsToppings(topping_response.ToLower()))
                                     {
-                                        Topping topping = new Topping(topping_response);
+                                        Topping topping = new Topping(topping_response.ToLower());
+                                        if(iceCream.Toppings.Contains(topping))
+                                        {
+                                            Console.WriteLine("Unable to add duplicate toppings");
+                                            continue;
+                                        }
                                         iceCream.Toppings.Add(topping);
                                         Console.WriteLine("Topping added");
                                         break;
@@ -358,21 +380,20 @@ namespace PRG2_Assignment
                                     {
                                         foreach (Topping t in iceCream.Toppings)
                                         {
-                                            if (t.Type.ToLower() == topping_response)
+                                            if (t.Type.ToLower() == topping_response.ToLower())
                                             {
                                                 iceCream.Toppings.Remove(t);
                                                 key = true;
-                                            }
-                                            else
-                                            {
-                                                key = false;
-                                                Console.WriteLine("Topping not found");
                                             }
                                         }
                                         if (key)
                                         {
                                             Console.WriteLine("Topping removed");
                                             break;
+                                        }
+                                        if(!key)
+                                        {
+                                            Console.WriteLine("Toppings not found");
                                         }
 
                                     }
