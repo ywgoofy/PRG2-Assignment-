@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -216,6 +217,7 @@ namespace PRG2_Assignment
                             {
                                 int count = 1;
                                 bool premium;
+                                bool key = false;
                                 Console.WriteLine("These are your current Flavours.");
                                 foreach (Flavour f in iceCream.Flavours)
                                 {
@@ -230,7 +232,7 @@ namespace PRG2_Assignment
                                 {
                                     Console.Write("Which flavours would you like to change: ");
                                     flavour_to_change = Console.ReadLine();
-                                    bool key = false;
+                                    
                                     foreach (Flavour f in iceCream.Flavours)
                                     {
                                         if (flavour_to_change.ToLower() == f.Type.ToLower())
@@ -265,22 +267,29 @@ namespace PRG2_Assignment
                                 }
                                 Flavour flavour_replace = new Flavour(flavour_to_replace, premium, 1);
 
+                                
                                 foreach (Flavour f in iceCream.Flavours)
                                 {
+                                    key = false;
                                     if (f.Type == flavour_to_change && f.Quantity > 1)
                                     {
                                         f.Quantity -= 1;
+                                        
                                         foreach (Flavour f1 in iceCream.Flavours)
                                         {
                                             if (f1.Type == flavour_to_replace)
                                             {
                                                 f1.Quantity += 1;
-                                            }
-                                            else
-                                            {
-                                                iceCream.Flavours.Add(flavour_replace);
-                                            }
+                                                key = true;
+                                                break;
+                                            }    
+                                            
                                         }
+                                        if(!key)
+                                        {
+                                            iceCream.Flavours.Add(flavour_replace);
+                                        }
+                                        
                                     }
                                     else
                                     {
@@ -291,10 +300,11 @@ namespace PRG2_Assignment
                                             {
                                                 f1.Quantity += 1;
                                             }
-                                            else
-                                            {
-                                                iceCream.Flavours.Add(flavour_replace);
-                                            }
+                                            
+                                        }
+                                        if (!key)
+                                        {
+                                            iceCream.Flavours.Add(flavour_replace);
                                         }
                                     }
                                 }
