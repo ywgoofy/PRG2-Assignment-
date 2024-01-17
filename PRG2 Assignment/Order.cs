@@ -387,8 +387,32 @@ namespace PRG2_Assignment
                     {
                         if(iceCream.Option == "Cone")
                         {
-                            Cone cone = new Cone(iceCream.Option, iceCream.Scoops, iceCream.Flavours, iceCream.Toppings,false) ;
-                            Console.Write("Would you like to add dipped cone?");
+                            Cone cone = (Cone)iceCream;
+                            while (true)
+                            {
+                                Console.WriteLine("[1] Add dipped cone");
+                                Console.WriteLine("[2] Remove dipped cone");
+                                Console.WriteLine("Please enter your option: ");
+                                string option = Console.ReadLine();
+                                if (option == "1")
+                                {
+                                    cone.Dipped = true;
+                                    break;
+                                }
+                                else if (option == "2")
+                                {
+                                    cone.Dipped = false;
+                                    break;
+                                }
+                                else
+                                {
+                                    Console.WriteLine("Invalid option");
+                                }
+                            }
+                        }
+                        else
+                        {
+
                         }
                     }
 
