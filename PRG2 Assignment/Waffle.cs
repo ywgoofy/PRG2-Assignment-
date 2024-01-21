@@ -22,10 +22,11 @@ namespace PRG2_Assignment
         //Methods
         public override double CalculatePrice() //override abstract method
         {
+            // Ice Cream flavours for waffles are $3 more
             double cost = 0;
-            double singleScoop = 4;
-            double doubleScoop = 5.50;
-            double tripleScoop = 6.50;
+            double singleScoop = 7;
+            double doubleScoop = 8.50;
+            double tripleScoop = 9.50;
 
             if (Scoops == 1)
             {
@@ -50,9 +51,12 @@ namespace PRG2_Assignment
                 }
             }
 
-            //Add waffle cost
-            cost += 3;
-
+            //Add upgrade waffle cost
+            if (WaffleFlavour == "Pandan" || WaffleFlavour == "Red Velvet" || WaffleFlavour == "Charcoal")
+            {
+                cost += 3;
+            }
+               
             //Add cost of toppings
             cost += (Toppings.Count * 1);
             return cost;
