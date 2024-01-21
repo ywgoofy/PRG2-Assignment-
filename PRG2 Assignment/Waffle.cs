@@ -8,15 +8,18 @@ namespace PRG2_Assignment
 {
     internal class Waffle : IceCream
     {
-        //attributes
+        //Attributes
         private string waffleFlavour;
         public string WaffleFlavour { get; set; }
 
+        //Constructors
         Waffle() { }
         Waffle(string o, int s, List<Flavour> f, List<Topping> t, string wf) : base(o, s, f, t)
         {
             WaffleFlavour = wf;
         }
+
+        //Methods
         public override double CalculatePrice() //override abstract method
         {
             double cost = 0;
@@ -53,6 +56,11 @@ namespace PRG2_Assignment
             //Add cost of toppings
             cost += (Toppings.Count * 1);
             return cost;
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + "/n" + "Waffle Flavour: " + WaffleFlavour;
         }
     }
 }
