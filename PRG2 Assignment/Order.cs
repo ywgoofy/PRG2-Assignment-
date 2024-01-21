@@ -443,7 +443,32 @@ namespace PRG2_Assignment
                         }
                         else
                         {
-
+                            Waffle waffle = (Waffle)iceCream;
+                            Console.WriteLine("This is the information of your waffle");
+                            Console.WriteLine(waffle.ToString());
+                            try
+                            {
+                                while (true)
+                                {
+                                    Console.WriteLine();
+                                    Console.Write("What waffle flavour would you like");
+                                    string flavour = Console.ReadLine();
+                                    string temp = flavour.ToLower();
+                                    if (temp == "pandan" || temp == "red velvet" || temp == "characoal" || temp == "original")
+                                    {
+                                        waffle.WaffleFlavour = flavour;
+                                        break;
+                                    }
+                                    else
+                                    {
+                                        Console.WriteLine("Invalid flavour");
+                                    }
+                                }
+                            }
+                            catch(FormatException)
+                            {
+                                Console.WriteLine("Invalid Input");
+                            }
                         }
                     }
 
