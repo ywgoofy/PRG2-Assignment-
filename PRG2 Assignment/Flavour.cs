@@ -18,17 +18,19 @@ namespace PRG2_Assignment
 
         //contructors
         public Flavour() { }
-        public Flavour(string Type, bool Premium, int Quantity) 
+        public Flavour(string type, bool premium, int quantity) 
         { 
-            type = Type;
-            premium = Premium;
-            quantity = Quantity;
+            Type = type;
+            Premium = premium;
+            Quantity = quantity;
         }
 
         //Methods
         public override string ToString()
         {
-            return base.ToString();
+            return "Type: " + type + "/n" +
+                "Premium: " + premium + "/n" +
+                "Quantity: " + quantity;
         }
     }
 }

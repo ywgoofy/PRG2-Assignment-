@@ -18,7 +18,7 @@ namespace PRG2_Assignment
 
         //Constructors
         public Cone() : base() { }
-        public Cone(string o, int s, List<Flavour> fList, List<Topping> tList, bool d) : base(o, s, fList, tList)
+        public Cone(string o, int s, List<Flavour> f, List<Topping> t, bool d) : base(o, s, f, t)
         {
             Dipped = d;
         }

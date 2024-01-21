@@ -14,15 +14,15 @@ namespace PRG2_Assignment
 
         //Constructors
         public Topping() { }
-        public Topping(string Type) 
+        public Topping(string type) 
         { 
-            type = Type;
+            Type = type;
         }
 
         //Methods
         public override string ToString()
         {
-            return base.ToString();
+            return "Type: " + type;
         }
     }
 }

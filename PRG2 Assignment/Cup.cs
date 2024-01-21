@@ -10,7 +10,7 @@ namespace PRG2_Assignment
     {
         //Constructors
         public Cup() { }
-        public Cup(string o, int s, List<Flavour> fList, List<Topping> tList) : base(o, s, fList, tList) { }
+        public Cup(string o, int s, List<Flavour> f, List<Topping> t) : base(o, s, f, t) { }
 
         //Methods
         public override double CalculatePrice() //override abstract method
