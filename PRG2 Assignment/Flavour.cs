@@ -28,9 +28,9 @@ namespace PRG2_Assignment
         //Methods
         public override string ToString()
         {
-            return "Type: " + type + "/n" +
-                "Premium: " + premium + "/n" +
-                "Quantity: " + quantity;
+            return "Type: " + Type + "/n" +
+                "Premium: " + Premium + "/n" +
+                "Quantity: " + Quantity;
         }
     }
 }

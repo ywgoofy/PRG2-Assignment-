@@ -22,7 +22,7 @@ namespace PRG2_Assignment
         //Methods
         public override string ToString()
         {
-            return "Type: " + type;
+            return "Type: " + Type;
         }
     }
 }
