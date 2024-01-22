@@ -138,8 +138,7 @@ namespace PRG2_Assignment
                                 Console.WriteLine("Invalid Input");
                             }
                         }
-                    }
-                    else if (choice == "2")
+                    }  else if (choice == "2")
                     {
                         while (true)
                         {

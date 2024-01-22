@@ -23,6 +23,18 @@ namespace PRG2_Assignment
         {
             Points = pt;
             PunchCard = pc;
+            if(Points < 50)
+            {
+                Tier = "Ordinary";
+            }
+            else if (Points <100)
+            {
+                Tier = "Sliver";
+            }
+            else
+            {
+                Tier = "Gold";
+            }
         }
 
         //Methods

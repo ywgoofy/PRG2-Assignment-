@@ -46,7 +46,7 @@ namespace PRG2_Assignment
 
         public bool IsBirthday()
         {
-            if (Dob == DateTime.Now)
+            if (Dob.ToString("dd/MM") == DateTime.Now.ToString("dd/MM"))
             {
                 return true;
             }
@@ -63,7 +63,8 @@ namespace PRG2_Assignment
             {
                 s += o.ToString() + "\n";
             }
-            return "Name " + Name + " MemberID: " + MemberId+ " Dob: " + Dob + "CurrentOrder: " + CurrentOrder + "\nOrder History:" + s + "Rewards:" + Reward.ToString();
+            
+            return "Name: " + Name + " MemberID: " + MemberId+ " Dob: " + Dob + " CurrentOrder: " + CurrentOrder + "\nOrder History:" + s + "Rewards:" + Reward.ToString();
         }
     }
 }
