@@ -38,6 +38,8 @@ List<string[]> ReadingFile(string file)
 List<string[]> order_info = ReadingFile("orders.csv");
 
 List<string[]> customer_info = ReadingFile("customers.csv");
+
+
 List<Customer> customer_list = new List<Customer>();
 
 
@@ -65,18 +67,35 @@ void DisplayCustomer()
 {
     string CurrentOrder = null;
     string s = null;
-    Console.WriteLine("{0,-15}{1,-15}{2,-15}{3,-15}{4,-15}{5,-15}", "Name","MemberID","Dob","CurrentOrder","OrderHistory","Rewards"); 
-    
+    Console.WriteLine("{0,-7}{1,-15}{2,-15}{3,-15}{4,-15}{5,-15}{6,-15}", "Index","Name","MemberID","Dob","CurrentOrder","OrderHistory","Rewards");
+    int count = 1;
     foreach(Customer c in customer_list)
     {
         foreach(Order o in c.OrderHistory)
         {
             s = s + o.ToString();
         }
-        Console.WriteLine("{0,-15}{1,-15}{2,-15}{3,-15}{4,-15}{5,-15}",c.Name,c.MemberId,c.Dob.ToString("dd/MM/yyyy"),c.CurrentOrder,s,c.Reward);
+        if(c.CurrentOrder == null)
+        {
+            Console.WriteLine("{0,-7}{1,-15}{2,-15}{3,-15}{4,-15}{5,-15}{6,-15}",count, c.Name, c.MemberId, c.Dob.ToString("dd/MM/yyyy"), c.CurrentOrder, s, c.Reward);
+        }
+        else
+        {
+            Console.WriteLine("{0,-7}{1,-15}{2,-15}{3,-15}{4,-15}{5,-15}{6,-15}", count,c.Name, c.MemberId, c.Dob.ToString("dd/MM/yyyy"), c.CurrentOrder.ToString(), s, c.Reward);
+        }
+        count++;
     }
     Console.WriteLine();
 }
+
+
+//Other options methods
+
+
+
+
+
+//Option 5
 
 
 
@@ -107,7 +126,29 @@ void DisplayMenu() //Needs to be added more
                 DisplayCustomer();
                 
             }
-            
+            //Add other options here
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            else if(option == "5") //NOT FINISHED
+            {
+                DisplayCustomer();
+                Console.Write("Please select a customer using the index");
+                int index = Convert.ToInt32(Console.ReadLine());
+                Customer c = customer_list[index - 1];
+                Console.WriteLine(c.ToString());
+            }
         }
         catch (FormatException)
         {
