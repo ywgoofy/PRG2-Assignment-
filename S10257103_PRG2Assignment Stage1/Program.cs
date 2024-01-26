@@ -116,48 +116,28 @@ for (int i = 0; i < customer_info.Count; i++)
 }
 
 //Adding of orders to the customer
-
+List<string> flavour_list = new List<string>();
+List<string> topping_list = new List<string>();
+/*
 for (int i = 0; i<order_info.Count; i++)
 {
-    List<string> flavour_list = new List<string>();
-    List<string> topping_list = new List<string>();
-    List<Flavour> class_flavour_list = new List<Flavour>();
-    List<Topping> class_topping_list = new List<Topping>();
-
     int id = Convert.ToInt32(order_info[i][0]);
     int memberId = Convert.ToInt32(order_info[i][1]);
     DateTime timeRecieved = Convert.ToDateTime(order_info[i][2]);
     DateTime timeFulfilled = Convert.ToDateTime(order_info[i][3]);
     string option = order_info[i][4];
     int scoops = Convert.ToInt32(order_info[i][5]);
-
-    //CHECKING FOR CONE BOOLEAN (DIPPED)
-    bool dipped = false; //DEFAULT TO FALSE
-    string temp;
-    if (!String.IsNullOrEmpty(temp = order_info[i][6]))
-    {
-        if(temp != "")
-        {
-            if(temp == "TRUE")
-            {
-                dipped = true;
-            }
-            /*else if(temp == "FALSE")
-            {
-                dipped = false;
-            }*/
-        }
-    }
+    bool dipped = Convert.ToBoolean(order_info[i][6]);
     string waffleFlavour = order_info[i][7];
     string flavour1 = order_info[i][8];
     flavour_list.Add(flavour1);
     Flavour flav = new Flavour(flavour1,IsPremium(flavour1.ToLower()),1);
-    class_flavour_list.Add(flav);
     string flavour2;
-    //Flavour flav2 = new Flavour() ;
+    Flavour flav2 = new Flavour() ;
     string flavour3;
-    if((flavour2 = order_info[i][9]) != "") //Flavour 2
+    if(string.IsNullOrEmpty(flavour2 = order_info[i][9])) //Flavour 2
     {
+        flavour2 = order_info[i][9];
         if(flavour_list.Contains(flavour2))
         {
             flav.Quantity++;
@@ -165,87 +145,68 @@ for (int i = 0; i<order_info.Count; i++)
         else
         {
             flavour_list.Add(flavour2);
-            Flavour flav2 = new Flavour(flavour2, IsPremium(flavour2), 1);
-            class_flavour_list.Add(flav2);
+            flav2 = new Flavour(flavour2, IsPremium(flavour2), 1);
         }
         
     }
-    if ((flavour3 = order_info[i][10]) != "") //Flavour 3
+    if (string.IsNullOrEmpty(flavour3 = order_info[i][10])) //Flavour 3
     {
-        
-        bool key = true;
-        foreach(Flavour f in class_flavour_list)
+        flavour3 = order_info[i][10];
+        if (flavour_list.Contains(flavour3))
         {
-            if(f.Type == flavour3)
+            foreach (string s in flavour_list)
             {
-                f.Quantity++;
-                key = false;
-                break;
+                if(s == flavour3)
+                {
+                    if(flav.Type == s)
+                    {
+                        flav.Quantity++;
+                    }
+                    flav2.Type = flavour2;
+                    flav2.Premium = IsPremium(flavour2);
+                    flav2.Quantity = 1;
+                }
             }
         }
-        if(key)
+        else
         {
-            Flavour flav3 = new Flavour(flavour3,IsPremium(flavour3),1);
+            flavour_list.Add(flavour3);
+            Flavour flav3 = new Flavour(flavour3, IsPremium(flavour3), 1);
         }
 
     }
-    string t1;
-    string t2;
-    string t3;
-    string t4;
+    string topping1;
+    string topping2;
+    string topping3;
+    string topping4;
     
-    t1 = order_info[i][11];
-    Topping topping1 = new Topping(t1);
-    class_topping_list.Add(topping1);
-    //topping_list.Add(topping1); //Topping 1
-    if((t2 = order_info[i][12]) != "") //Topping 2
+    topping1 = order_info[i][11];
+    topping_list.Add(topping1); //Topping 1
+    if(string.IsNullOrEmpty(topping2 = order_info[i][12])) //Topping 2
     {
-        Topping topping2 = new Topping(t2);
-        class_topping_list.Add(topping2);
+        topping2 = order_info[i][12];
+        if(toppings_list.Contains(topping2))
+        {
+
+        }
+        topping_list.Add(topping2);
     }
-    if((t3 = order_info[i][13]) != "") //Topping 3
+    if(string.IsNullOrEmpty(topping3 = order_info[i][13])) //Topping 3
     {
-        Topping topping3 = new Topping(t3);
-        class_topping_list.Add(topping3);
+        topping3 = order_info[i][13];
+        topping_list.Add(topping3);
     }
-    if((t4 = order_info[i][14]) != "") //Topping 4
+    if(string.IsNullOrEmpty(topping4 = order_info[i][14])) //Topping 4
     {
-        Topping topping4 = new Topping(t4);
-        class_topping_list.Add((topping4));
+        topping4 = order_info[i][14];
+        topping_list.Add(topping4);
     }
 
 
     Order order = new Order(id, timeRecieved);
-    order.TimeFulfilled = timeFulfilled;
 
-    IceCream iceCream;
-    if(option == "Cup")
-    {
-        iceCream = new Cup(option, scoops, class_flavour_list, class_topping_list);
-    }
-    else if(option == "Cone")
-    {
-        iceCream = new Cone(option, scoops, class_flavour_list, class_topping_list, dipped);
-    }
-    else
-    {
-        //option == waffle
-        iceCream = new Waffle(option, scoops, class_flavour_list, class_topping_list, waffleFlavour);
-    }
-
-
-    foreach(Customer c in customer_list)
-    {
-        if (c.MemberId == memberId)
-        {
-            order.AddIceCream(iceCream);
-            c.OrderHistory.Add(order);
-            break;
-        }
-     
-    }
 }
-
+*/
 
 
 //Option 1 Listing of customer
@@ -275,6 +236,12 @@ void DisplayCustomer()
 
 
 
+
+
+//Option 5
+
+
+
 //Display Menu
 
 void DisplayMenu() //Needs to be added more
@@ -287,9 +254,6 @@ void DisplayMenu() //Needs to be added more
             Console.WriteLine("[1] List all customers");
             Console.WriteLine("[2] List all current orders");
             Console.WriteLine("[3] Register a new customer");
-            Console.WriteLine("[4] Create a customer's order");
-            Console.WriteLine("[5] Display order details of a customer");
-            Console.WriteLine("[6] Modify order details");
 
             Console.Write("Please enter options: ");
             string option = Console.ReadLine();
@@ -320,50 +284,18 @@ void DisplayMenu() //Needs to be added more
 
 
 
-            else if(option == "5")
+            else if(option == "5") //NOT FINISHED
             {
-                string flavour = "";
-                string toppings = "";
                 DisplayCustomer();
-                Console.Write("Please select a customer using the index: ");
+                Console.Write("Please select a customer using the index");
                 int index = Convert.ToInt32(Console.ReadLine());
-
                 Customer c = customer_list[index - 1];
-                //Header 
-                //Console.WriteLine("Current Order");
-                //Console.WriteLine("{0,-25}{1,-25}",c.CurrentOrder.TimeReceived,c.CurrentOrder.TimeFulfilled);
-                Console.WriteLine();
-                Console.WriteLine("Order History");
-                Console.WriteLine();
-                
-                foreach (Order o in c.OrderHistory)
-                {
-                    Console.WriteLine("{0,-25}{1,-25}", "TimeRecieved", "TimeFulfilled");
-                    Console.WriteLine("{0,-25}{1,-25}",o.TimeReceived,o.TimeFulfilled);
-                    Console.WriteLine("IceCream Details");
-                    foreach (IceCream i in o.IceCreamList)
-                    {
-                        foreach(Flavour f in i.Flavours)
-                        {
-                            flavour += f.Type + "|";
-                        }
-                        foreach (Topping t in i.Toppings)
-                        {
-                            toppings += t.Type + "|";
-                        }
-
-                        Console.WriteLine("Option: {0,-15} Scoops: {1,-15} Flavours: |{2,-15} Toppings: |{3,-15}", i.Option,i.Scoops,flavour,toppings);
-                        Console.WriteLine();
-                        flavour = "";
-                        toppings = "";
-                    }
-                    
-                }
+                Console.WriteLine(c.ToString());
             }
             else if(option == "6")
             {
                 DisplayCustomer();
-                Console.WriteLine("Please select a customer using the index: ");
+                Console.WriteLine("Please select a customer using the index");
                 int index = Convert.ToInt32(Console.ReadLine());
                 
             }

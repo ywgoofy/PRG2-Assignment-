@@ -28,7 +28,7 @@ namespace PRG2_Assignment
         public DateTime? TimeFulfilled { get; set; }
 
         private List<IceCream> iceCreamList;
-        public List<IceCream> IceCreamList { get; set; } = new List<IceCream>();
+        public List<IceCream> IceCreamsList { get; set; } = new List<IceCream>();
 
         //Constructors
         public Order() { }
@@ -42,7 +42,7 @@ namespace PRG2_Assignment
         //Methods
         public void ModifyIceCream(int i) //Nah this one i discuss with that pookie, shit extra confusing
         {
-            IceCream iceCream = IceCreamList[i - 1];
+            IceCream iceCream = iceCreamList[i - 1];
             //Premium flavours
             List<string> premium_flavours = new List<string> { "durian", "ube", "sea salt" };
 
@@ -522,19 +522,19 @@ namespace PRG2_Assignment
 
         public void AddIceCream(IceCream i)
         {
-            IceCreamList.Add(i);
+            iceCreamList.Add(i);
         }
 
         public void DeleteIceCream(int i)
         {
-            IceCreamList.Remove(IceCreamList[i - 1]); //i-1 because int i is option of the icecream chosen from the icecreams displayed in the order starting by 1
+            IceCreamsList.Remove(IceCreamsList[i - 1]); //i-1 because int i is option of the icecream chosen from the icecreams displayed in the order starting by 1
         }
 
         public double CalculateTotal()
         {
             double total = 0;
 
-            foreach (IceCream i in IceCreamList)
+            foreach (IceCream i in iceCreamList)
             {
                 total += i.CalculatePrice();
             }
@@ -545,7 +545,7 @@ namespace PRG2_Assignment
         public override string ToString()
         {
             string str = null;
-            foreach (IceCream i in IceCreamList)
+            foreach (IceCream i in iceCreamList)
             {
                 str += i.ToString() + "\n";
             }

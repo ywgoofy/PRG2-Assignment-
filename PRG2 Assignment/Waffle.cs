@@ -13,8 +13,8 @@ namespace PRG2_Assignment
         public string WaffleFlavour { get; set; }
 
         //Constructors
-        Waffle() { }
-        Waffle(string o, int s, List<Flavour> f, List<Topping> t, string wf) : base(o, s, f, t)
+        public Waffle() { }
+        public Waffle(string o, int s, List<Flavour> f, List<Topping> t, string wf) : base(o, s, f, t)
         {
             WaffleFlavour = wf;
         }

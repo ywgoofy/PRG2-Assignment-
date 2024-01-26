@@ -44,9 +44,9 @@ namespace PRG2_Assignment
         }
 
 
-        public Order MakeOrder() //im gg to ask qn about this i not sure if its memberid or id from order
+        public Order MakeOrder() 
         {
-            return CurrentOrder = new Order(OrderHistory.Count+1,DateTime.Now);
+            return CurrentOrder = new Order(0,DateTime.Now); //Default id is set to 0 such that in the program itself we will change the id to its count.
         }
 
         public bool IsBirthday()
@@ -64,9 +64,13 @@ namespace PRG2_Assignment
         public override string ToString()
         {
             string s = null;
-            foreach(Order o in OrderHistory)
+            if (orderHistory.count != 0)
             {
-                s += o.ToString() + "\n";
+                foreach (Order o in OrderHistory)
+                {
+
+                    s += o.ToString() + "\n";
+                }
             }
             
             return "Name: " + Name + " MemberID: " + MemberId+ " Dob: " + Dob + " CurrentOrder: " + CurrentOrder + "\nOrder History:" + s + "Rewards:" + Reward.ToString();
