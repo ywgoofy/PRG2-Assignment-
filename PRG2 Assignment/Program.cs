@@ -9,11 +9,14 @@ using System.Security.Cryptography.X509Certificates;
 // Partner Name : Tan Yew Wren
 //==========================================================
 
+//Flavours
+List<string> flavours = new List<string>();
+
 //Premium flavours
-List<string> premium_flavours = new List<string> { "durian", "ube", "sea salt" };
+List<string> premium_flavours = new List<string> ();
 
 //Toppings list
-List<string> toppings_list = new List<string> { "sprinkles", "mochi", "sago", "orea" };
+List<string> toppings_list = new List<string> ();
 
 //Utility Methods
 
@@ -33,7 +36,7 @@ bool IsPremium(string temp) //Checks if the flavour is premium or not
 bool IsFlavour(string temp)
 {
     temp = temp.ToLower();
-    if (temp == "vanilla" || temp == "chocolate" || temp == "strawberry" || temp == "durian" || temp == "ube" || temp == "sea salt")
+    if (flavours.Contains(temp))
     {
         return true;
     }
@@ -83,6 +86,38 @@ List<string[]> ReadingFile(string file)
         
     }
     return info;
+}
+
+//TESTING FOR OPTION 6
+Order temp_order = new Order(6, DateTime.Now);
+List<Flavour> temp_flavour_list = new List<Flavour>();
+List<Topping> temp_toppings_list = new List<Topping>();
+temp_flavour_list.Add(new Flavour("Strawberry", false, 1));
+temp_flavour_list.Add(new Flavour("Chocolate", false, 1));
+temp_toppings_list.Add(new Topping("Oreos"));
+temp_toppings_list.Add(new Topping("Mochi"));
+temp_order.IceCreamList.Add(new Cone("Cone", 2, temp_flavour_list, temp_toppings_list,false));
+//TESTING FOR OPTION 6
+
+//Adding dynamically of flavours and premium flavours
+
+List<string[]> flavour_info = ReadingFile("flavours.csv");
+
+foreach (string[] s in flavour_info)
+{
+    flavours.Add(s[0].ToLower());
+    if (Convert.ToInt32(s[1]) > 0)
+    {
+        premium_flavours.Add(s[0].ToLower());
+    }
+}
+
+//Adding dynamically of toppings
+List<string[]> toppings_info = ReadingFile("toppings.csv");
+
+foreach (string[] s in toppings_info)
+{
+    toppings_list.Add(s[0].ToLower());
 }
 
 
@@ -362,9 +397,23 @@ void DisplayMenu() //Needs to be added more
             }
             else if(option == "6")
             {
-                DisplayCustomer();
+                /*DisplayCustomer();
                 Console.WriteLine("Please select a customer using the index: ");
-                int index = Convert.ToInt32(Console.ReadLine());
+                int index = Convert.ToInt32(Console.ReadLine());*/
+
+                
+                temp_order.ModifyIceCream(1);
+
+               
+
+                
+                
+
+                foreach(IceCream i in temp_order.IceCreamList)
+                {
+                    Console.WriteLine(i.ToString());
+                    
+                }
                 
             }
         }
