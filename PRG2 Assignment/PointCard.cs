@@ -74,10 +74,13 @@ namespace PRG2_Assignment
         }
         public void Punch()
         {
-            PunchCard++;
-            if(PunchCard==11)
+            if (PunchCard > 10)
             {
                 PunchCard = 0;
+            }
+            else
+            {
+                PunchCard++;
             }
         }
 

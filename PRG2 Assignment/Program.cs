@@ -966,6 +966,12 @@ void DisplayMenu() //Needs to be added more
                             }
                         }
                         List<IceCream> dupe_icecreamlist = first_order.IceCreamList.ToList();
+                        bool special = false;
+                        if(customer.Reward.PunchCard == 10)
+                        {
+                            customer.Reward.Punch();
+                            special = true;
+                        }
                         //Displaying all ice cream in that order
                         foreach (IceCream i in first_order.IceCreamList)
                         {
@@ -994,17 +1000,19 @@ void DisplayMenu() //Needs to be added more
                             }
                             cost -= most_ex;
                         }
-                        if (customer.Reward.PunchCard == 10)
+                        //Checking for punch card
+                        if (customer.Reward.PunchCard > 10 || special)
                         {
                             cost -= dupe_icecreamlist[0].CalculatePrice();
+                            if(special)
+                            {
+                                customer.Reward.Punch();
+                            }
+                            
 
                         }
 
                             
-
-                        //Adding of Points and punchcard
-                        //customer.Reward.AddPoints(CalculatePoints(cost));
-                        //customer.Reward.Punch();
 
                         //Checking eligibility of redeeming points
                         if (customer.Reward.Tier != "Ordinary")
@@ -1013,6 +1021,13 @@ void DisplayMenu() //Needs to be added more
                             {
                                 try
                                 {
+                                    if (cost == 0)
+                                    {
+                                        Console.WriteLine();
+                                        Console.WriteLine("The bill is already 0 dollars");
+                                        Console.WriteLine();
+                                        break;
+                                    }
                                     Console.WriteLine("Available Points: {0}", customer.Reward.Points);
                                     Console.Write("How much points do you want to redeem: ");
                                     int points_redeem = Convert.ToInt32(Console.ReadLine());
@@ -1025,13 +1040,7 @@ void DisplayMenu() //Needs to be added more
                                         continue;
                                     }
 
-                                    if (cost == 0)
-                                    {
-                                        Console.WriteLine();
-                                        Console.WriteLine("The bill is already 0 dollars, exiting");
-                                        Console.WriteLine();
-                                        break;
-                                    }
+                                   
                                     if(points_redeem > customer.Reward.Points)
                                     {
                                         Console.WriteLine("Insufficient points");
