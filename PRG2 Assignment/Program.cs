@@ -12,6 +12,12 @@ using System.Security.Cryptography.X509Certificates;
 // Partner Name : Tan Yew Wren
 //==========================================================
 
+//==========================================================
+// Student Number : S10257300E
+// Student Name : Tan Yew Wren
+// Partner Name : Lim Ze Yu
+//==========================================================
+
 //Flavours
 List<string> flavours = new List<string>();
 
@@ -418,10 +424,14 @@ void RegNewCustomer(List<Customer> customer_list)
 
 
 //option 4
-void CreateCustomerOrder(List<string> flavour_list, List<string> topping_list, Queue<Order> goldQueue, Queue<Order> regularQueue, List<Customer> customer_list)
+void CreateCustomerOrder(List<string> flavour_list, List<string> topping_list, Queue<Order> goldQueue, Queue<Order> regularQueue, List<Customer> customer_list, bool key,Customer? customer)
 {
+    //key = true
     Order currentOrder = null;
-    DisplayCustomer();
+    if (!key)
+    {
+        DisplayCustomer();
+    }
     int indexInput = 0;
     while (true)
     {
@@ -441,48 +451,51 @@ void CreateCustomerOrder(List<string> flavour_list, List<string> topping_list, Q
         bool premium = false; // to check if the flavour is premium
         bool fexists = false; // to check if the flavour already exists in the selectedFlavours
         bool texists = false; // to check if the topping is already inside
-        // Display existing customers
-        
-        while (true)
-        {
-            if(indexInput == 0)
-            {
-                try
-                {
-                    Console.Write("Select a customer by index: ");
-                    indexInput = Convert.ToInt32(Console.ReadLine());
+                              // Display existing customers
 
-                    // Check if the selected customer exists   
-                    foreach (Customer c in customer_list)
+        if (!key)
+        {
+            while (true)
+            {
+                if (indexInput == 0)
+                {
+                    try
                     {
-                        if (c.Name == customer_list[indexInput - 1].Name)
+                        Console.Write("Select a customer by index: ");
+                        indexInput = Convert.ToInt32(Console.ReadLine());
+
+                        // Check if the selected customer exists   
+                        foreach (Customer c in customer_list)
                         {
-                            customerExists = true;
-                            customerId = c.MemberId; // get customer id to create new order object
+                            if (c.Name == customer_list[indexInput - 1].Name)
+                            {
+                                customerExists = true;
+                                customerId = c.MemberId; // get customer id to create new order object
+                            }
                         }
+                        break;
                     }
+                    catch (ArgumentOutOfRangeException)
+                    {
+                        Console.WriteLine("Please enter a valid index.\n");
+                        continue;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Please enter an integer.\n");
+                        continue;
+                    }
+                }
+                else
+                {
                     break;
                 }
-                catch (ArgumentOutOfRangeException)
-                {
-                    Console.WriteLine("Please enter a valid index.\n");
-                    continue;
-                }
-                catch (FormatException)
-                {
-                    Console.WriteLine("Please enter an integer.\n");
-                    continue;
-                }
+
             }
-            else
+            if (currentOrder == null)
             {
-                break;
+                currentOrder = new Order(Convert.ToInt32(order_list[order_list.Count() - 1].Id) + 1, DateTime.Now); // create new order object
             }
-            
-        }
-        if(currentOrder == null)
-        {
-            currentOrder = new Order(Convert.ToInt32(order_list[order_list.Count() - 1].Id) + 1, DateTime.Now); // create new order object
         }
         
         Console.WriteLine("Ice Cream Order" + "\n----------------");
@@ -640,7 +653,14 @@ void CreateCustomerOrder(List<string> flavour_list, List<string> topping_list, Q
         if (option == "Cup")
         {
             IceCream newIceCream = new Cup(option, scoops, selectedFlavours, selectedToppings);
-            currentOrder.IceCreamList.Add(newIceCream); // add ice cream to current order
+            if (!key)
+            {
+                currentOrder.IceCreamList.Add(newIceCream); // add ice cream to current order
+            }
+            else
+            {
+                customer.CurrentOrder.AddIceCream(newIceCream);
+            }
         }
         else if (option == "Cone")
         {
@@ -664,7 +684,14 @@ void CreateCustomerOrder(List<string> flavour_list, List<string> topping_list, Q
                         Console.WriteLine("Invalid Input");
                     }
                     IceCream newIceCream = new Cone(option, scoops, selectedFlavours, selectedToppings, dippedCone);
-                    currentOrder.IceCreamList.Add(newIceCream);  // add ice cream to current order
+                    if (!key)
+                    {
+                        currentOrder.IceCreamList.Add(newIceCream);  // add ice cream to current order
+                    }
+                    else
+                    {
+                        customer.CurrentOrder.AddIceCream(newIceCream);
+                    }
                     break;
                 }
                 catch (IndexOutOfRangeException)
@@ -690,7 +717,14 @@ void CreateCustomerOrder(List<string> flavour_list, List<string> topping_list, Q
                     int wfoption = Convert.ToInt32(Console.ReadLine());
                     string wf = waffleflavours[wfoption - 1];
                     IceCream newIceCream = new Waffle(option, scoops, selectedFlavours, selectedToppings, wf);
-                    currentOrder.IceCreamList.Add(newIceCream);  // add ice cream to current order
+                    if (!key)
+                    {
+                        currentOrder.IceCreamList.Add(newIceCream);  // add ice cream to current order
+                    }
+                    else
+                    {
+                        customer.CurrentOrder.AddIceCream(newIceCream);
+                    }
                     break;
                 }
                 catch (IndexOutOfRangeException)
@@ -705,66 +739,507 @@ void CreateCustomerOrder(List<string> flavour_list, List<string> topping_list, Q
                 }
             }
         }
-
-        // Create a new instance of IceCream based on the selected option
-        while (true)
+        if(key)
         {
-            Console.Write("Do you wish to add another ice cream?[Y/N] ");
-            addAnother = Console.ReadLine().ToLower();
-            if (addAnother == "y" || addAnother == "n")
-            {
-                break;
-            }
-            else
-            {
-                Console.WriteLine("Please enter [Y/N].");
-                continue;
-            }
-        }
-
-
-        // loop again to continue adding ice cream
-        if (addAnother == "y")
-        {
-            /*if (customer_list[indexInput - 1].Reward.Tier == "Gold")
-            {
-                goldQueue.Enqueue(currentOrder);
-            }
-            else
-            {
-                regularQueue.Enqueue(currentOrder);
-
-            }*/
-            continue;
-        }
-        // Process the order and exit the loop if the user doesn't want to add another ice cream
-        else if (addAnother == "n")
-        {
-            if (customer_list[indexInput - 1].Reward.Tier == "Gold")
-            {
-                goldQueue.Enqueue(currentOrder);
-            }
-            else
-            {
-                regularQueue.Enqueue(currentOrder);
-
-            }
-            //customer_list[indexInput - 1].CurrentOrder = currentOrder;
-            customer_list[indexInput - 1].CurrentOrder = currentOrder;
-            order_list.Add(currentOrder);
-            // orders.Add(currentOrder);
-            Console.WriteLine("Your order has been placed successfully!\n");
+            Console.WriteLine("New ice cream created");
             break;
         }
+
+        // Create a new instance of IceCream based on the selected option
+        if (!key)
+        {
+            while (true)
+            {
+                Console.Write("Do you wish to add another ice cream?[Y/N] ");
+                addAnother = Console.ReadLine().ToLower();
+                if (addAnother == "y" || addAnother == "n")
+                {
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Please enter [Y/N].");
+                    continue;
+                }
+            }
+
+
+            // loop again to continue adding ice cream
+            if (addAnother == "y")
+            {
+                /*if (customer_list[indexInput - 1].Reward.Tier == "Gold")
+                {
+                    goldQueue.Enqueue(currentOrder);
+                }
+                else
+                {
+                    regularQueue.Enqueue(currentOrder);
+
+                }*/
+                continue;
+            }
+            // Process the order and exit the loop if the user doesn't want to add another ice cream
+            else if (addAnother == "n")
+            {
+                if (customer_list[indexInput - 1].Reward.Tier == "Gold")
+                {
+                    goldQueue.Enqueue(currentOrder);
+                }
+                else
+                {
+                    regularQueue.Enqueue(currentOrder);
+
+                }
+                //customer_list[indexInput - 1].CurrentOrder = currentOrder;
+                customer_list[indexInput - 1].CurrentOrder = currentOrder;
+                order_list.Add(currentOrder);
+                // orders.Add(currentOrder);
+                Console.WriteLine("Your order has been placed successfully!\n");
+                break;
+            }
+        }
+        
     }
 }
 
 //YW DO ONE
+//Option 5
+void DisplayOrderDetails()
+{
+    int index = 0;
+    Customer c = customer_list[0];
+    string flavour = "";
+    string toppings = "";
+    DisplayCustomer();
+    while (true)
+    {
+        try
+        {
+            Console.Write("Please select a customer using the index: ");
+            index = Convert.ToInt32(Console.ReadLine());
+
+            c = customer_list[index - 1];
+            break;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine("Invalid input. Please enter an index from the customers displayed.");
+            continue;
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input. Please enter an index.");
+        }
+    }
 
 
-//Display Menu
+    //Header 
+    Console.WriteLine("Current Order");
+    if (c.CurrentOrder != null)
+    {
+        Console.WriteLine("{0,-25}{1,-25}", "TimeRecieved", "TimeFulfilled");
+        Console.WriteLine("{0,-25}{1,-25}", c.CurrentOrder.TimeReceived, c.CurrentOrder.TimeFulfilled);
+        Console.WriteLine("IceCream Details");
+        foreach (IceCream i in c.CurrentOrder.IceCreamList)
+        {
+            foreach (Flavour f in i.Flavours)
+            {
+                flavour += f.Type + "|";
+            }
+            foreach (Topping t in i.Toppings)
+            {
+                toppings += t.Type + "|";
+            }
 
-void DisplayMenu() //Needs to be added more
+            Console.WriteLine("OrderId: {0,-10}Option: {1,-15} Scoops: {2,-15} Flavours: |{3,-15} Toppings: |{4,-15}", c.CurrentOrder.Id, i.Option, i.Scoops, flavour, toppings);
+            Console.WriteLine();
+            flavour = "";
+            toppings = "";
+        }
+    }
+    else
+    {
+        Console.WriteLine("{0} has no current order", c.Name);
+    }
+
+    Console.WriteLine();
+    Console.WriteLine("Order History");
+    Console.WriteLine();
+
+    foreach (Order o in c.OrderHistory)
+    {
+        Console.WriteLine("{0,-25}{1,-25}", "TimeRecieved", "TimeFulfilled");
+        Console.WriteLine("{0,-25}{1,-25}", o.TimeReceived, o.TimeFulfilled);
+        Console.WriteLine("IceCream Details");
+        foreach (IceCream i in o.IceCreamList)
+        {
+            foreach (Flavour f in i.Flavours)
+            {
+                flavour += f.Type + "|";
+            }
+            foreach (Topping t in i.Toppings)
+            {
+                toppings += t.Type + "|";
+            }
+
+            Console.WriteLine("OrderId: {0,-10}Option: {1,-15} Scoops: {2,-15} Flavours: |{3,-15} Toppings: |{4,-15}", o.Id, i.Option, i.Scoops, flavour, toppings);
+            Console.WriteLine();
+            flavour = "";
+            toppings = "";
+        }
+    }
+}
+
+//Option 6
+void ModifyOrder()
+{
+
+
+    while (true)
+    {
+
+
+        try
+        {
+            DisplayCustomer();
+            Console.Write("Please select a customer using the index: ");
+            int index_customer = Convert.ToInt32(Console.ReadLine());
+            Customer customer = customer_list[index_customer - 1];
+            if (customer.CurrentOrder == null)
+            {
+                Console.WriteLine("You have no current orders");
+                Console.WriteLine();
+                break;
+            }
+            int count = 1;
+            Console.WriteLine("These are your current Ice Creams");
+            foreach (IceCream i in customer.CurrentOrder.IceCreamList)
+            {
+                Console.WriteLine("Index: {0}\t{1}", count, i.ToString());
+                count++;
+            }
+            Console.WriteLine("[1] Modify IceCream");
+            Console.WriteLine("[2] Add a new IceCream");
+            Console.WriteLine("[3] Remove a exisiting IcCream");
+            Console.Write("Please select index");
+            int index_option = Convert.ToInt32(Console.ReadLine());
+            if (index_option == 1)
+            {
+                Console.WriteLine();
+                Console.Write("Plesae choose a icecream to edit: ");
+                int index_icecream = Convert.ToInt32(Console.ReadLine());
+
+                customer.CurrentOrder.ModifyIceCream(index_icecream);
+                break;
+            }
+            if (index_option == 2)
+            {
+                CreateCustomerOrder(flavours, toppings_list, goldQueue, regularQueue, customer_list, true, customer);
+                break;
+            }
+            if (index_option == 3)
+            {
+                Console.WriteLine();
+                Console.Write("Plesae choose a icecream to remove: ");
+                int index_icecream = Convert.ToInt32(Console.ReadLine());
+
+                customer.CurrentOrder.DeleteIceCream(index_icecream);
+                break;
+            }
+
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine("Index out of range");
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input");
+        }
+
+
+
+
+    }
+}
+//Option 7
+void ProcessAndCheckout()
+{
+    while (true)
+    {
+
+        try
+        {
+
+            if (regularQueue.Count() == 0 && goldQueue.Count() == 0)
+            {
+                Console.WriteLine("There is no current orders in the queue");
+                Console.WriteLine();
+                break;
+            }
+
+
+            double cost = 0;
+            Customer customer = null;
+            Order first_order = null;
+            //Declaring the first order out of the queue
+            if (goldQueue.Count == 0)
+            {
+                first_order = regularQueue.First();
+                regularQueue.Dequeue();
+            }
+            else
+            {
+                first_order = goldQueue.First();
+                goldQueue.Dequeue();
+            }
+
+
+            //Searching for the customer
+            foreach (Customer c in customer_list)
+            {
+                if (c.CurrentOrder != null && c.CurrentOrder.Id == first_order.Id)
+                {
+                    customer = c;
+                    break;
+                }
+            }
+            List<IceCream> dupe_icecreamlist = first_order.IceCreamList.ToList();
+            bool special = false;
+            if (customer.Reward.PunchCard == 10)
+            {
+                customer.Reward.Punch();
+                special = true;
+            }
+            //Displaying all ice cream in that order
+            foreach (IceCream i in first_order.IceCreamList)
+            {
+                Console.WriteLine(i.ToString());
+                cost += i.CalculatePrice();
+                if (customer.Reward.PunchCard < 10)
+                {
+                    customer.Reward.Punch();
+                }
+            }
+            Console.WriteLine("COST: " + cost);
+
+            //Check if it is customer's bday
+            double most_ex = 0;
+            if (customer.IsBirthday())
+            {
+                foreach (IceCream i in first_order.IceCreamList)
+                {
+                    double current_price = i.CalculatePrice();
+                    if (current_price > most_ex)
+                    {
+                        most_ex = current_price;
+                        dupe_icecreamlist.Remove(i);
+
+                    }
+                }
+                cost -= most_ex;
+            }
+            //Checking for punch card
+            if (customer.Reward.PunchCard > 10 || special)
+            {
+                cost -= dupe_icecreamlist[0].CalculatePrice();
+                if (special)
+                {
+                    customer.Reward.Punch();
+                }
+
+
+            }
+
+
+
+            //Checking eligibility of redeeming points
+            if (customer.Reward.Tier != "Ordinary")
+            {
+                while (true)
+                {
+                    try
+                    {
+                        if (cost == 0)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("The bill is already 0 dollars");
+                            Console.WriteLine();
+                            break;
+                        }
+                        Console.WriteLine("Available Points: {0}", customer.Reward.Points);
+                        Console.Write("How much points do you want to redeem: ");
+                        int points_redeem = Convert.ToInt32(Console.ReadLine());
+                        //Offsetting the price, Conversion rate, 1pt = $0.02
+                        double offset_amount = points_redeem * 0.02;
+
+                        if (points_redeem < 0)
+                        {
+                            Console.WriteLine("Please enter a integer that is >0");
+                            continue;
+                        }
+
+
+                        if (points_redeem > customer.Reward.Points)
+                        {
+                            Console.WriteLine("Insufficient points");
+                            continue;
+                        }
+
+                        else if ((cost - offset_amount) < 0)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("Cannot redeem this amount, the bill will become negative.");
+                            Console.WriteLine();
+                            continue;
+                        }
+
+                        customer.Reward.RedeemPoints(points_redeem);
+                        cost -= offset_amount;
+
+                        break;
+                    }
+                    catch (FormatException)
+                    {
+                        Console.WriteLine("Please enter a integer");
+                    }
+
+                }
+
+            }
+
+
+            //Displaying total bill
+            Console.WriteLine("FINAL COST: $" + cost);
+
+
+            //Displaying membership status and points
+            Console.WriteLine("Membership Status: {0}\tPoints: {1}", customer.Reward.Tier, customer.Reward.Points);
+
+            //Prompting user to press any key to complete payment
+            Console.WriteLine("Please press any key to complete payment");
+            string key = Console.ReadLine();
+
+            //Adding of Points and punchcard
+            customer.Reward.AddPoints(CalculatePoints(cost));
+
+            customer.CurrentOrder.TimeFulfilled = DateTime.Now;
+            customer.OrderHistory.Add(customer.CurrentOrder);
+            Order order_append = first_order;
+
+            customer.CurrentOrder = null;
+            //Appending to the the files (ORDER)
+            using (StreamWriter sw = new StreamWriter("orders.csv", true))
+            {
+                //Header
+
+                foreach (IceCream i in order_append.IceCreamList)
+                {
+                    List<string> flavour_list = new List<string>();
+
+                    int id = 0;
+                    DateTime timerecieved;
+                    DateTime timefulfilled;
+                    string options;
+                    int scoops;
+                    string dipped = "";
+                    string waffleflavour = "";
+                    string flav1 = "";
+                    string flav2 = "";
+                    string flav3 = "";
+                    string topping1 = "";
+                    string topping2 = "";
+                    string topping3 = "";
+                    string topping4 = "";
+                    id = order_append.Id;
+                    int memberid = customer.MemberId;
+                    timerecieved = order_append.TimeReceived;
+                    timefulfilled = Convert.ToDateTime(order_append.TimeFulfilled);
+
+                    if (i.Option == "Cone")
+                    {
+                        Cone cone = (Cone)i;
+                        if (cone.Dipped)
+                        {
+                            dipped = "TRUE";
+                        }
+                        else
+                        {
+                            dipped = "FALSE";
+                        }
+                    }
+                    if (i.Option == "Waffle")
+                    {
+                        Waffle waffle = (Waffle)i;
+                        waffleflavour = waffle.WaffleFlavour;
+                    }
+                    foreach (Flavour f in i.Flavours)
+                    {
+                        flavour_list.Add(f.Type);
+                    }
+                    flav1 = flavour_list[0];
+
+                    foreach (string s in flavour_list)
+                    {
+                        try
+                        {
+                            flav1 = flavour_list[0];
+                            flav2 = flavour_list[1];
+                            flav3 = flavour_list[2];
+
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            break;
+                        }
+                    }
+
+
+                    foreach (Topping t in i.Toppings)
+                    {
+                        try
+                        {
+                            topping1 = i.Toppings[0].Type;
+                            topping2 = i.Toppings[1].Type;
+                            topping3 = i.Toppings[2].Type;
+                            topping4 = i.Toppings[3].Type;
+                        }
+                        catch (ArgumentOutOfRangeException)
+                        {
+                            break;
+                        }
+                    }
+                    sw.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14}", id, memberid, timerecieved, timefulfilled, i.Option, i.Scoops, dipped, waffleflavour, flav1, flav2, flav3, topping1, topping2, topping3, topping4);
+                }
+
+
+            }
+
+            //Appending to customer
+            using (StreamWriter sw = new StreamWriter("customers.csv", false))
+            {
+                sw.WriteLine("Name,MemberId,DOB,MembershipStatus,MembershipPoints,PunchCard");
+                foreach (Customer c in customer_list)
+                {
+                    sw.WriteLine("{0},{1},{2},{3},{4},{5}", c.Name, c.MemberId, c.Dob, c.Reward.Tier, c.Reward.Points, c.Reward.PunchCard);
+                }
+            }
+            break;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Console.WriteLine("Index out of range");
+        }
+        catch (FormatException)
+        {
+            Console.WriteLine("Invalid input");
+        }
+    }
+}
+
+ //Display Menu
+
+ void DisplayMenu() //Needs to be added more
 {
     while (true)
     {
@@ -815,402 +1290,26 @@ void DisplayMenu() //Needs to be added more
             }
             else if (option == "4")
             {
-                CreateCustomerOrder(flavours, toppings_list, goldQueue, regularQueue, customer_list);
+                CreateCustomerOrder(flavours, toppings_list, goldQueue, regularQueue, customer_list,false,null);
             }
 
 
             else if (option == "5")
             {
-                string flavour = "";
-                string toppings = "";
-                DisplayCustomer();
-                Console.Write("Please select a customer using the index: ");
-                int index = Convert.ToInt32(Console.ReadLine());
-
-                Customer c = customer_list[index - 1];
-                //Header 
-                Console.WriteLine("Current Order");
-                if (c.CurrentOrder != null)
-                {
-                    Console.WriteLine("{0,-25}{1,-25}", "TimeRecieved", "TimeFulfilled");
-                    Console.WriteLine("{0,-25}{1,-25}", c.CurrentOrder.TimeReceived, c.CurrentOrder.TimeFulfilled);
-                    Console.WriteLine("IceCream Details");
-                    foreach (IceCream i in c.CurrentOrder.IceCreamList)
-                    {
-                        foreach (Flavour f in i.Flavours)
-                        {
-                            flavour += f.Type + "|";
-                        }
-                        foreach (Topping t in i.Toppings)
-                        {
-                            toppings += t.Type + "|";
-                        }
-
-                        Console.WriteLine("OrderId: {0,-10}Option: {1,-15} Scoops: {2,-15} Flavours: |{3,-15} Toppings: |{4,-15}", c.CurrentOrder.Id, i.Option, i.Scoops, flavour, toppings);
-                        Console.WriteLine();
-                        flavour = "";
-                        toppings = "";
-                    }
-                }
-                else
-                {
-                    Console.WriteLine("{0} has no current order", c.Name);
-                }
-
-                Console.WriteLine();
-                Console.WriteLine("Order History");
-                Console.WriteLine();
-
-                foreach (Order o in c.OrderHistory)
-                {
-                    Console.WriteLine("{0,-25}{1,-25}", "TimeRecieved", "TimeFulfilled");
-                    Console.WriteLine("{0,-25}{1,-25}", o.TimeReceived, o.TimeFulfilled);
-                    Console.WriteLine("IceCream Details");
-                    foreach (IceCream i in o.IceCreamList)
-                    {
-                        foreach (Flavour f in i.Flavours)
-                        {
-                            flavour += f.Type + "|";
-                        }
-                        foreach (Topping t in i.Toppings)
-                        {
-                            toppings += t.Type + "|";
-                        }
-
-                        Console.WriteLine("OrderId: {0,-10}Option: {1,-15} Scoops: {2,-15} Flavours: |{3,-15} Toppings: |{4,-15}", o.Id, i.Option, i.Scoops, flavour, toppings);
-                        Console.WriteLine();
-                        flavour = "";
-                        toppings = "";
-                    }
-
-                }
+                
+                DisplayOrderDetails();
             }
-            else if (option == "6") //HAVE NOT DONE option 2 and 3 only did option 1
+            else if (option == "6")
             {
-                while (true)
-                {
-
-
-                    try
-                    {
-                        DisplayCustomer();
-                        Console.Write("Please select a customer using the index: ");
-                        int index_customer = Convert.ToInt32(Console.ReadLine());
-                        Customer customer = customer_list[index_customer - 1];
-                        if (customer.CurrentOrder == null)
-                        {
-                            Console.WriteLine("You have no current orders");
-                            Console.WriteLine();
-                            break;
-                        }
-                        int count = 1;
-                        Console.WriteLine("These are your current Ice Creams");
-                        foreach (IceCream i in customer.CurrentOrder.IceCreamList)
-                        {
-                            Console.WriteLine("Index: {0}\t{1}", count, i.ToString());
-                            count++;
-                        }
-                        Console.WriteLine();
-                        Console.Write("Plesae choose a icecream to edit: ");
-                        int index_icecream = Convert.ToInt32(Console.ReadLine());
-                        
-                        customer.CurrentOrder.ModifyIceCream(index_icecream);
-                        break;
-
-
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        Console.WriteLine("Index out of range");
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Invalid input");
-                    }
-
-
-                    
-
-                }
+                ModifyOrder();
+                
             }
 
             else if (option == "7")
             {
-                while (true)
-                {
+                ProcessAndCheckout();
+                
 
-                    try
-                    {
-
-                        if(regularQueue.Count() == 0 && goldQueue.Count() == 0)
-                        {
-                            Console.WriteLine("There is no current orders in the queue");
-                            Console.WriteLine();
-                            break;
-                        }
-
-                        
-                        double cost = 0;
-                        Customer customer = null;
-                        Order first_order = null;
-                        //Declaring the first order out of the queue
-                        if (goldQueue.Count == 0)
-                        {
-                            first_order = regularQueue.First();
-                            regularQueue.Dequeue();
-                        }
-                        else
-                        {
-                            first_order = goldQueue.First();
-                            goldQueue.Dequeue();
-                        }
-                            
-
-                        //Searching for the customer
-                        foreach(Customer c  in customer_list)
-                        {
-                            if( c.CurrentOrder != null && c.CurrentOrder.Id == first_order.Id )
-                            {
-                                customer = c;
-                                break;
-                            }
-                        }
-                        List<IceCream> dupe_icecreamlist = first_order.IceCreamList.ToList();
-                        bool special = false;
-                        if(customer.Reward.PunchCard == 10)
-                        {
-                            customer.Reward.Punch();
-                            special = true;
-                        }
-                        //Displaying all ice cream in that order
-                        foreach (IceCream i in first_order.IceCreamList)
-                        {
-                            Console.WriteLine(i.ToString());
-                            cost += i.CalculatePrice();
-                            if (customer.Reward.PunchCard < 10)
-                            {
-                                customer.Reward.Punch();
-                            }
-                        }
-                        Console.WriteLine("COST: " + cost);
-
-                        //Check if it is customer's bday
-                        double most_ex = 0;
-                        if (customer.IsBirthday())
-                        {
-                            foreach (IceCream i in first_order.IceCreamList)
-                            {
-                                double current_price = i.CalculatePrice();
-                                if (current_price > most_ex)
-                                {
-                                    most_ex = current_price;
-                                    dupe_icecreamlist.Remove(i);
-
-                                }
-                            }
-                            cost -= most_ex;
-                        }
-                        //Checking for punch card
-                        if (customer.Reward.PunchCard > 10 || special)
-                        {
-                            cost -= dupe_icecreamlist[0].CalculatePrice();
-                            if(special)
-                            {
-                                customer.Reward.Punch();
-                            }
-                            
-
-                        }
-
-                            
-
-                        //Checking eligibility of redeeming points
-                        if (customer.Reward.Tier != "Ordinary")
-                        {
-                            while (true)
-                            {
-                                try
-                                {
-                                    if (cost == 0)
-                                    {
-                                        Console.WriteLine();
-                                        Console.WriteLine("The bill is already 0 dollars");
-                                        Console.WriteLine();
-                                        break;
-                                    }
-                                    Console.WriteLine("Available Points: {0}", customer.Reward.Points);
-                                    Console.Write("How much points do you want to redeem: ");
-                                    int points_redeem = Convert.ToInt32(Console.ReadLine());
-                                    //Offsetting the price, Conversion rate, 1pt = $0.02
-                                    double offset_amount = points_redeem * 0.02;
-
-                                    if (points_redeem < 0)
-                                    {
-                                        Console.WriteLine("Please enter a integer that is >0");
-                                        continue;
-                                    }
-
-                                   
-                                    if(points_redeem > customer.Reward.Points)
-                                    {
-                                        Console.WriteLine("Insufficient points");
-                                        continue;
-                                    }
-
-                                    else if ((cost - offset_amount) < 0)
-                                    {
-                                        Console.WriteLine();
-                                        Console.WriteLine("Cannot redeem this amount, the bill will become negative.");
-                                        Console.WriteLine();
-                                        continue;
-                                    }
-
-                                    customer.Reward.RedeemPoints(points_redeem);
-                                    cost -= offset_amount;
-
-                                    break;
-                                }
-                                catch (FormatException)
-                                {
-                                    Console.WriteLine("Please enter a integer");
-                                }
-
-                            }
-
-                        }
-
-
-                        //Displaying total bill
-                        Console.WriteLine("FINAL COST: $" + cost);
-
-
-                        //Displaying membership status and points
-                        Console.WriteLine("Membership Status: {0}\tPoints: {1}", customer.Reward.Tier, customer.Reward.Points);
-
-                        //Prompting user to press any key to complete payment
-                        Console.WriteLine("Please press any key to complete payment");
-                        string key = Console.ReadLine();
-
-                        //Adding of Points and punchcard
-                        customer.Reward.AddPoints(CalculatePoints(cost));
-
-                        customer.CurrentOrder.TimeFulfilled = DateTime.Now;
-                        customer.OrderHistory.Add(customer.CurrentOrder);
-                        Order order_append = first_order;
-
-                        customer.CurrentOrder = null;
-                        //Appending to the the files (ORDER)
-                        using (StreamWriter sw = new StreamWriter ("orders.csv",true))
-                        {
-                            //Header
-
-                            foreach(IceCream i in order_append.IceCreamList)
-                            {
-                                List<string> flavour_list = new List<string>();
-
-                                int id = 0;
-                                DateTime timerecieved;
-                                DateTime timefulfilled;
-                                string options;
-                                int scoops;
-                                string dipped = "";
-                                string waffleflavour = "";
-                                string flav1 = "";
-                                string flav2 = "";
-                                string flav3 = "";
-                                string topping1 = "";
-                                string topping2 = "";
-                                string topping3 = "";
-                                string topping4 = "";
-                                id = order_append.Id;
-                                int memberid = customer.MemberId;
-                                timerecieved = order_append.TimeReceived;
-                                timefulfilled = Convert.ToDateTime(order_append.TimeFulfilled);
-
-                                if (i.Option == "Cone")
-                                {
-                                    Cone cone = (Cone)i;
-                                    if(cone.Dipped)
-                                    {
-                                        dipped = "TRUE";
-                                    }
-                                    else
-                                    {
-                                        dipped = "FALSE";
-                                    }
-                                }
-                                if(i.Option == "Waffle")
-                                {
-                                    Waffle waffle = (Waffle)i;
-                                    waffleflavour = waffle.WaffleFlavour;
-                                }
-                                foreach(Flavour f in i.Flavours)
-                                {
-                                    flavour_list.Add(f.Type);
-                                }
-                                flav1 = flavour_list[0];
-                                
-                                foreach(string s in flavour_list)
-                                {
-                                    try
-                                    {
-                                        flav1 = flavour_list[0];
-                                        flav2 = flavour_list[1];
-                                        flav3 = flavour_list[2];
-                                        
-                                    }
-                                    catch(ArgumentOutOfRangeException)
-                                    {
-                                        break;
-                                    }
-                                }
-
-                                
-                                foreach(Topping t in i.Toppings)
-                                {
-                                    try
-                                    {
-                                        topping1 = i.Toppings[0].Type;
-                                        topping2 = i.Toppings[1].Type;
-                                        topping3 = i.Toppings[2].Type;
-                                        topping4 = i.Toppings[3].Type;
-                                    }
-                                    catch(ArgumentOutOfRangeException)
-                                    {
-                                        break;
-                                    }
-                                }
-                                sw.WriteLine("{0},{1},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},{14}", id, memberid, timerecieved, timefulfilled, i.Option, i.Scoops, dipped, waffleflavour,flav1,flav2,flav3,topping1,topping2,topping3,topping4) ;
-                            }
-
-
-                        }
-
-                        //Appending to customer
-                        using (StreamWriter sw = new StreamWriter("customers.csv",false))
-                        {
-                            sw.WriteLine("Name,MemberId,DOB,MembershipStatus,MembershipPoints,PunchCard");
-                            foreach(Customer c in customer_list)
-                            {
-                                sw.WriteLine("{0},{1},{2},{3},{4},{5}", c.Name,c.MemberId,c.Dob,c.Reward.Tier,c.Reward.Points,c.Reward.PunchCard);
-                            }
-                        }
-
-
-
-                        break;
-
-                       
-                    }
-                    catch (ArgumentOutOfRangeException)
-                    {
-                        Console.WriteLine("Index out of range");
-                    }
-                    catch (FormatException)
-                    {
-                        Console.WriteLine("Invalid input");
-                    }
-                }
             }
                 
         }
