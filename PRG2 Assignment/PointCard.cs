@@ -45,13 +45,13 @@ namespace PRG2_Assignment
         public void AddPoints(int i)
         {
             Points += i;
-            if (Tier == "Oridinary")
+            if (Tier == "Ordinary")
             {
                 if (Points >= 50 && Points < 100)
                 {
                     Tier = "Sliver";
                 }
-                else
+                else if(Points >= 100)
                 {
                     Tier = "Gold";
                 }
