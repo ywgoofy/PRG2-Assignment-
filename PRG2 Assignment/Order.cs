@@ -207,6 +207,7 @@ namespace PRG2_Assignment
                                 else if(option == "2" && iceCream is not Cone)
                                 {
                                     Console.WriteLine("Changed to Cone");
+                                    iceCream.Option = "Cone";
                                     Console.WriteLine();
                                     
 
@@ -332,6 +333,11 @@ namespace PRG2_Assignment
                                     Console.WriteLine();
                                     while (true)
                                     {
+                                        if (iceCream.Scoops == 1)
+                                        {
+                                            Console.WriteLine("Must have more than 1 scoops to remove.");
+                                            break;
+                                        }
                                         bool success = false;
                                         try
                                         {

@@ -74,7 +74,11 @@ namespace PRG2_Assignment
         }
         public void Punch()
         {
-            punchCard++;
+            PunchCard++;
+            if(PunchCard==11)
+            {
+                PunchCard = 0;
+            }
         }
 
         public override string ToString()
