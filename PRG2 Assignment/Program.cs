@@ -421,12 +421,14 @@ void RegNewCustomer(List<Customer> customer_list)
 void CreateCustomerOrder(List<string> flavour_list, List<string> topping_list, Queue<Order> goldQueue, Queue<Order> regularQueue, List<Customer> customer_list)
 {
     Order currentOrder = null;
+    DisplayCustomer();
+    int indexInput = 0;
     while (true)
     {
         // Initialising variables
         string addAnother = null;
         int NumOfToppings = 0;
-        int indexInput = 0;
+        
         int scoops = 0;
         string option = null;
         int customerId = 0;
@@ -440,35 +442,43 @@ void CreateCustomerOrder(List<string> flavour_list, List<string> topping_list, Q
         bool fexists = false; // to check if the flavour already exists in the selectedFlavours
         bool texists = false; // to check if the topping is already inside
         // Display existing customers
-        DisplayCustomer();
+        
         while (true)
         {
-            try
+            if(indexInput == 0)
             {
-                Console.Write("Select a customer by index: ");
-                indexInput = Convert.ToInt32(Console.ReadLine());
-
-                // Check if the selected customer exists   
-                foreach (Customer c in customer_list)
+                try
                 {
-                    if (c.Name == customer_list[indexInput - 1].Name)
+                    Console.Write("Select a customer by index: ");
+                    indexInput = Convert.ToInt32(Console.ReadLine());
+
+                    // Check if the selected customer exists   
+                    foreach (Customer c in customer_list)
                     {
-                        customerExists = true;
-                        customerId = c.MemberId; // get customer id to create new order object
+                        if (c.Name == customer_list[indexInput - 1].Name)
+                        {
+                            customerExists = true;
+                            customerId = c.MemberId; // get customer id to create new order object
+                        }
                     }
+                    break;
                 }
+                catch (ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("Please enter a valid index.\n");
+                    continue;
+                }
+                catch (FormatException)
+                {
+                    Console.WriteLine("Please enter an integer.\n");
+                    continue;
+                }
+            }
+            else
+            {
                 break;
             }
-            catch (ArgumentOutOfRangeException)
-            {
-                Console.WriteLine("Please enter a valid index.\n");
-                continue;
-            }
-            catch (FormatException)
-            {
-                Console.WriteLine("Please enter an integer.\n");
-                continue;
-            }
+            
         }
         if(currentOrder == null)
         {
